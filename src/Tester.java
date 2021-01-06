@@ -2,7 +2,13 @@ import java.util.Arrays;
 
 public class Tester {
     public static void main(String[] args) {
-        FibonacciHeap.HeapNode[] arr = new FibonacciHeap.HeapNode[3];
-        System.out.println(Arrays.toString(arr));
+        FibonacciHeap heap = new FibonacciHeap();
+        heap.insert(1);
+        heap.insert(2);
+        heap.insert(3);
+        heap.insert(4);
+        printHeapElad.printHeapFib(heap);
+        heap.deleteMin();
+        printHeapElad.printHeapFib(heap);
     }
 }
