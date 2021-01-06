@@ -93,14 +93,19 @@ public class FibonacciHeap
     public HeapNode insert(int key){ //Complexity: O(1)
         HeapNode node = new HeapNode(key);
         this.addTreeToCount();
-        node.next = this.root;
-        node.prev = this.root.prev;
-        this.root.prev = node;
-        node.prev.next = node;
-        this.root = node;
         this.addToSize();
-        if (node.key < this.min.key){
-            this.min = node;
+        if (this.root == null){
+            this.root = node;
+        }
+        else {
+            node.setNext(this.root);
+            node.setPrev(this.root.prev);
+            this.root.prev.setNext(node);
+            this .root.setPrev(node);
+            this.root = node;
+            if (node.key < this.min.key){
+                this.min = node;
+            }
         }
         return node;
     }
@@ -118,23 +123,31 @@ public class FibonacciHeap
         }
      	else {
      	    HeapNode minimum = this.min;
-     	    minimum.prev.next = minimum.next;
-     	    minimum.next.prev = minimum.prev;
-     	    this.reduceTreeFromCount();       //Check connections
+     	    this.reduceTreeFromCount();
+            this.reduceFromSize();
+            this.numOfTrees += minimum.rank;
             HeapNode child = minimum.child;
             HeapNode lastChild = child.prev;
-     	    this.root.prev.setNext(child);
-     	    child.prev.setNext(this.root);
-     	    child.setPrev(this.root.prev);
-     	    this.root.setPrev(lastChild);
-     	    this.root = child;
+            minimum.prev.setNext(child);
+            child.setPrev(minimum.prev);
+            minimum.next.setPrev(lastChild);
+            lastChild.setNext(minimum.next);
+            if (this.min.equals(this.root)){
+                this.root = child;
+            }
+            minimum.setPrev(null);
+            minimum.setNext(null);
      	    this.successiveLinking();
-            this.reduceFromSize();
             //Update min done by successive linking
         }
      	
     }
 
+    /**
+     * Complexity: O(?????????????????)
+     * needed for deletion
+     * @post - maximum of logn trees in the heap
+     * */
     private void successiveLinking(){
         if (this.isEmpty()){
             return;
@@ -145,15 +158,20 @@ public class FibonacciHeap
         helpArr[this.root.getRank()] = this.root;
         HeapNode curr = this.root.next;
         while (!(curr.equals(starterRoot))){
-            if (helpArr[curr.getRank()] != null){
-                HeapNode nodeToLink = helpArr[curr.getRank()];
-                helpArr[curr.getRank()] = null;
+            int rank = curr.getRank();
+            HeapNode nextNode = curr.next;
+            if (helpArr[rank] != null){
+                HeapNode nodeToLink = helpArr[curr.getRank()];    //how is linking done between trees with deleted nodes?
+                helpArr[rank] = null;
                 HeapNode linked = link(curr, nodeToLink);
-                helpArr[curr.getRank() + 1] = linked;
+                helpArr[rank+1] = linked;
             }
-            //check what happens when creating array of heapNodes
+            else {
+                helpArr[rank] = curr;
+            }
+            curr = nextNode;
             //finish successive linking and link
-            //check all work done before
+
         }
     }
 
