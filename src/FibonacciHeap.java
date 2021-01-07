@@ -138,37 +138,51 @@ public class FibonacciHeap
     * Delete the node containing the minimum key.
     *
     */
-    public void deleteMin()
-    {
-        if (this.min == null){
+    public void deleteMin() {
+        if (this.min == null) { //heap is empty
+            return;
         }
-     	else {
-     	    HeapNode minimum = this.min;
-            this.reduceTreeFromCount();
-            this.reduceFromSize();
-            this.numOfTrees += min.rank;
-     	    if (this.numOfTrees==1){
-     	        this.first = min.child;
-            }
-     	    else if (this.min.child == null){
-     	        cutNodeFromList(minimum);
-            }
-     	    else{
-                HeapNode child = minimum.child;
-                HeapNode lastChild = child.prev;
-                minimum.prev.setNext(child);
-                child.setPrev(minimum.prev);
-                minimum.next.setPrev(lastChild);
-                lastChild.setNext(minimum.next);
-                if (this.min.equals(this.first)) {
-                    this.first = child;
-                }
-            }
+        //heap isn't empty:
+        this.numOfTrees -= 1;
+        this.size -= 1;
+        HeapNode minimum = this.min;
+
+        if (this.size == 1) { //heap contains one node
+            this.min = null;
+            this.first = null;
+            this.totalNumberOfMarked = 0;
             minimum.setPrev(null);
             minimum.setNext(null);
-     	    this.successiveLinking();
+            minimum.setChild(null);
+        } else { //heap contains more than one node
+            if (this.min.equals(this.min.next)) { //heap contains 1 Fibonacci tree and minimum has children
+                this.numOfTrees += this.min.rank;
+                this.first = this.min.child;
+            } else { //minimum has brothers
+                if (this.min.child == null) { //min has no children
+                    minimum.prev.setNext(minimum.next);
+                    minimum.next.setPrev(minimum.prev);
+                } else { //minimum has children
+                    this.numOfTrees += min.rank;
+                    HeapNode child = minimum.child;
+                    HeapNode lastChild = child.prev;
+                    minimum.prev.setNext(child);
+                    child.setPrev(minimum.prev);
+                    minimum.next.setPrev(lastChild);
+                    lastChild.setNext(minimum.next);
+                    if (this.min.equals(this.first)) {
+                        this.first = child;
+                    }
+                }
+            }
         }
+        minimum.setPrev(null);
+        minimum.setNext(null);
+        minimum.setChild(null);
+        this.successiveLinking();
     }
+
+
 
     /**
      * Removes node from the list its in
@@ -235,7 +249,7 @@ public class FibonacciHeap
         }
         boolean firstFound = false;
         HeapNode minimum;
-        for (int i=0; i<helpArr.length-1; i++){
+        for (int i=0; i<helpArr.length; i++){
             if (helpArr[i] != null){
                 if (!firstFound){
                     curr = helpArr[i];
@@ -244,7 +258,7 @@ public class FibonacciHeap
                     firstFound = true;
                     continue;
                 }
-                if (helpArr[i].getKey() < min.getKey()){
+                if (helpArr[i].getKey() < this.min.getKey()){
                     this.min = helpArr[i];
                 }
                 curr.setNext(helpArr[i]);
@@ -257,26 +271,38 @@ public class FibonacciHeap
     }
 
     /**
+     * Links two Fibonacci trees
      * Complexity: O(1)
      * needed for successiveLinking
      * @post - maximum of logn trees in the heap
      * */
     public HeapNode link(HeapNode node1, HeapNode node2){
-        if (node1.getKey() > node2.getKey()){  //node 1 is always smaller
+        if (node1.getKey() > node2.getKey()){  //making sure that node 1 is always smaller
             return link(node2, node1);
         }
-        this.addLinkToCount();
-        node2.setPrev(node1.child.prev);
-        node2.setNext(node1.child);
-        node1.child.prev.setNext(node2);
-        node1.child.setPrev(node2);
-        node1.setChild(node2);
-        node2.setParent(node1);
-        node1.setRank(node1.getRank() -1);
-        node1.setMark(false);
-        totalNumberOfMarked -= 1;
-        this.reduceTreeFromCount();
-        this.addLinkToCount();
+        totalLinks += 1;
+        this.numOfTrees -= 1;
+        if (node1.child==null){ //linking two rank0 trees
+            node1.setChild(node2);
+            node2.setParent(node1);
+            node2.setPrev(node2);
+            node2.setNext(node2);
+        }
+        else {
+            node2.setPrev(node1.child.prev);
+            node2.setNext(node1.child);
+            node1.child.prev.setNext(node2);
+            node1.child.setPrev(node2);
+            node1.setChild(node2);
+            node2.setParent(node1);
+        }
+        if (node1.mark){
+            node1.setMark(false);
+            totalNumberOfMarked -= 1;
+        }
+        node1.setRank(node1.getRank()+1);
+        node1.setPrev(node1);
+        node1.setNext(node1);
         return node1;
     }
 
