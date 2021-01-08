@@ -326,6 +326,8 @@ public class Test {
         fibonacciHeap.deleteMin();
 
         for (int i = 2700; i > 2200; i--) {
+            //System.out.println("heap: " + heap.findMin() + " fibonacciHeap: " + fibonacciHeap.findMin().getKey());
+            //System.out.println("heap size: " + heap.size() + " fibonacciHeap size: " + fibonacciHeap.size());
             if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
                 bugFound(test);
                 return;
