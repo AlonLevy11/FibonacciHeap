@@ -1,6 +1,7 @@
 //FibonacciHeap Tester
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 
 public class Test {
@@ -219,6 +220,12 @@ public class Test {
         }
 
         for (int i = 2000; i < 2500; i++) {
+/*            System.out.println("i= " + i);
+            System.out.println("heap min: " + heap.findMin() + " fibo min: " + fibonacciHeap.findMin().getKey());
+            System.out.println("heap size: " + heap.size() + " fibo size: " + fibonacciHeap.size());
+            if (heap.size() == 2997 || i == 2002){
+                printHeapElad.printHeapFib(fibonacciHeap);
+            }*/
             if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
                 bugFound(test);
                 return;
@@ -322,6 +329,7 @@ public class Test {
             heap.insert(i);
             nodes.add(fibonacciHeap.insert(i));
         }
+
         heap.deleteMin();
         fibonacciHeap.deleteMin();
 
@@ -334,9 +342,9 @@ public class Test {
             fibonacciHeap.delete(nodes.get(i - 2000));
         }
 
+
         while (!heap.empty()) {
             if (heap.findMin() != fibonacciHeap.findMin().getKey() || heap.size() != fibonacciHeap.size()) {
-
                 bugFound(test);
                 return;
             }
@@ -682,7 +690,15 @@ public class Test {
             if (FibonacciHeap.totalCuts() - iterationCuts > 1)
                 noCascading = false;
         }
-
+        System.out.println("size: " + fibonacciHeap.size());
+        System.out.println("potential: " + fibonacciHeap.potential() + " tree size: " + treeSize);
+        System.out.println("marked: " + fibonacciHeap.getNumberOfMarked());
+        System.out.println("cuts: " + FibonacciHeap.totalCuts + " cuts: " + totalCuts);
+        System.out.println("Cuts - totalCuts: " + (FibonacciHeap.totalCuts() - totalCuts) + " v= " + (treeSize - 1));
+        System.out.println("links: " + FibonacciHeap.totalLinks() + " links: " + links);
+        System.out.println("counters Rep: " + fibonacciHeap.countersRep()[0] + " tree size: " + treeSize);
+        System.out.println(noCascading);
+        printHeapElad.printHeapFib(fibonacciHeap);
         if (fibonacciHeap.potential() != treeSize ||
             FibonacciHeap.totalCuts() - totalCuts != treeSize - 1 ||
             FibonacciHeap.totalLinks() - links != 0 ||
