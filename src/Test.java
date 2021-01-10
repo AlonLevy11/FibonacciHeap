@@ -690,15 +690,15 @@ public class Test {
             if (FibonacciHeap.totalCuts() - iterationCuts > 1)
                 noCascading = false;
         }
-        System.out.println("size: " + fibonacciHeap.size());
+/*        System.out.println("size: " + fibonacciHeap.size());
         System.out.println("potential: " + fibonacciHeap.potential() + " tree size: " + treeSize);
         System.out.println("marked: " + fibonacciHeap.getNumberOfMarked());
         System.out.println("cuts: " + FibonacciHeap.totalCuts + " cuts: " + totalCuts);
         System.out.println("Cuts - totalCuts: " + (FibonacciHeap.totalCuts() - totalCuts) + " v= " + (treeSize - 1));
         System.out.println("links: " + FibonacciHeap.totalLinks() + " links: " + links);
-        System.out.println("counters Rep: " + fibonacciHeap.countersRep()[0] + " tree size: " + treeSize);
-        System.out.println(noCascading);
-        printHeapElad.printHeapFib(fibonacciHeap);
+        System.out.println("counters Rep: " + fibonacciHeap.countersRep()[0] + " tree size: " + treeSize);*/
+        /*System.out.println(noCascading);*/
+        //printHeapElad.printHeapFib(fibonacciHeap);
         if (fibonacciHeap.potential() != treeSize ||
             FibonacciHeap.totalCuts() - totalCuts != treeSize - 1 ||
             FibonacciHeap.totalLinks() - links != 0 ||

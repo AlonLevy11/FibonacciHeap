@@ -160,10 +160,17 @@ public class FibonacciHeap
         int sizeOfArr = (int) Math.floor(logBase2(this.size)) + 1;
         HeapNode[] helpArr = new HeapNode[sizeOfArr];
         HeapNode starterFirst = this.first; //saves the first node to know when full circle is completed
+        if (starterFirst.mark){
+            starterFirst.setMark(false);
+            this.totalNumberOfMarked -= 1;
+        }
         helpArr[this.first.getRank()] = this.first;
         HeapNode curr = this.first.next;
-/*        try{*/
         while (!(curr.equals(starterFirst))){ //Didn't finish the full circle
+            if (curr.mark){
+                curr.setMark(false);
+                this.totalNumberOfMarked -= 1;
+            }
             int rank = curr.getRank();
             HeapNode nextNode = curr.next;
             //System.out.println(nextNode.getKey());
@@ -187,11 +194,6 @@ public class FibonacciHeap
             }
             curr = nextNode;
         }
-/*        }*/
-/*        catch (NullPointerException e){
-            System.out.println("Curr: key- " + curr.getKey() + " next- " + curr.next.getKey() + " prev- " + curr.prev.getKey());
-            System.out.println("Starter: key- " + starterFirst.getKey() + " next- " + starterFirst.next.getKey() + " prev- " + starterFirst.prev.getKey());
-        }*/
 
         boolean firstFound = false;
         HeapNode minimum;
@@ -232,14 +234,7 @@ public class FibonacciHeap
         }
         totalLinks += 1;
         this.numOfTrees -= 1;
-        if (node1.mark){
-            node1.setMark(false);
-            totalNumberOfMarked -= 1;
-        }
-        if (node2.mark){
-            node2.setMark(false);
-            totalNumberOfMarked -= 1;
-        }
+
         if (true){
             if (node1.child==null){ //linking two rank0 trees
                 node1.setChild(node2);
@@ -372,8 +367,6 @@ public class FibonacciHeap
         } else if (x.getParent().getKey() <= x.getKey()) { //Order is uninterrupted
             return;
         } else { //Order interrupted
-/*            x.prev.setNext(x.next);
-            x.next.setPrev(x.prev);*/
             cascadingCuts(x);
         }
     }
@@ -381,22 +374,24 @@ public class FibonacciHeap
     public void cascadingCuts(HeapNode node){
         HeapNode parent = node.parent;
         HeapNode next = node;
-        while ((!(node.isRoot())) && node.parent.mark){
+        while ((!(node.isRoot())) && (node.parent.mark)){
             next = node.parent;
             this.cut(node);
             node = next;
         }
 
         if (!(node.isRoot()) && !(node.parent.mark)){
-            node.parent.setMark(true);
-            this.totalNumberOfMarked += 1;
+            if (!(node.parent.isRoot())){
+                node.parent.setMark(true);
+                this.totalNumberOfMarked += 1;
+            }
             this.cut(node);
         }
     }
 
     public void cut(HeapNode node){
         node.parent.setRank(node.parent.getRank()-1);
-        if (!node.parent.mark){
+        if (!node.parent.mark && (!node.parent.isRoot())){
             node.parent.setMark(true);
             this.totalNumberOfMarked += 1;
         }
