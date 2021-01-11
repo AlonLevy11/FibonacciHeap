@@ -5,7 +5,7 @@ import java.util.Collections;
 public class NewTest {
 
     static Heap heap;
-    static FibonacciHeap fibonacciHeap;
+    static FibonacciHeap fibonacciHeap = new FibonacciHeap();
     FibonacciHeap.HeapNode node;
 
     public static void main(String[] args) {
@@ -35,11 +35,19 @@ public class NewTest {
             heap.delete(i);
             fibonacciHeap.delete(nodes.get(i - 2000));
         }*/
-        FibonacciHeap.HeapNode[] arrOfNodes = new FibonacciHeap.HeapNode[7];
+/*        FibonacciHeap.HeapNode[] arrOfNodes = new FibonacciHeap.HeapNode[7];
         for (int i=1; i<6; i++){
             arrOfNodes[i] = fibonacciHeap.insert(i);
         }
+        printHeapElad.printHeapFib(fibonacciHeap);*/
+
+        for (int i=0; i<17; i++){
+            fibonacciHeap.insert(i);
+        }
         printHeapElad.printHeapFib(fibonacciHeap);
+        fibonacciHeap.deleteMin();
+        printHeapElad.printHeapFib(fibonacciHeap);
+        int[] result = FibonacciHeap.kMin(fibonacciHeap, 6);
     }
 
 
